@@ -9,7 +9,7 @@
 - [Features](#features)
 - [Project Structure](#%EF%B8%8Fproject-structure)
 - [Run Project](#run-project)
-- [Managing API Keys](#managing-api-keys)
+- [Admin Key](#admin-key)
 - [Contributing](#contributing)
 - [Contact](#contact)
 
