@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafes List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet">
+    <style>
+        /* Color palette */
+        :root {
+            --primary-color: #2C3E50; /* Dark Blue */
+            --secondary-color: #18BC9C; /* Green */
+            --accent-color: #E74C3C; /* Red */
+            --background-color: #ECF0F1; /* Light Gray */
+            --text-color: #2C3E50; /* Dark Blue */
+            --link-color: #3498DB; /* Light Blue */
+            --link-hover-color: #2980B9; /* Darker Blue */
+            --card-bg-color: #FFFFFF; /* White */
+            --border-color: #BDC3C7; /* Gray */
+        }
+        body {
+            font-family: "Montserrat", sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header {
+            background-color: var(--primary-color);
+            color: var(--card-bg-color);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px; /* Adjust height as needed */
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .header .nav-buttons {
+            display: flex;
+            align-items: center;
+        }
+        .header a {
+            color: #ffff;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            margin-left: 10px;
+        }
+        .header a:hover {
+            background-color: var(--link-hover-color);
+            color: var(--card-bg-color);
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .cafe-list {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .cafe-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: var(--card-bg-color);
+            border-radius: 8px;
+        }
+        .cafe-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .cafe-item img {
+            width: 116px;
+            height: 116px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+            margin-left: 15px;
+        }
+        .cafe-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .cafe-details h5 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--text-color);
+        }
+        .cafe-details h4 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+        .cafe-details p {
+            margin: 5px 0;
+            color: var(--text-color);
+        }
+        .cafe-details div {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cafe-details span {
+            margin-right: 6px;
+        }
+        .cafe-details div span + span {
+            margin-left: 6px; /* Adjust this value as needed */
+        }
+        .map {
+            height: calc(100vh - 210px); /* Adjust to fit the available height */
+            background-color: var(--border-color);
+            border-radius: 8px;
+        }
+        .map iframe {
+            width: 100%; /* Ensure the iframe takes up the full width of its container */
+            height: 100%; /* Ensure the iframe takes up the full height of its container */
+            border: none; /* Remove iframe border */
+            border-radius: 8px; /* Match the border radius of the container */
+        }
+        .cafe-details .btn {
+            background-color: var(--link-color);
+            color: var(--card-bg-color);
+            border: none;
+            padding: 7px 12px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 5px;
+        }
+        .cafe-details .btn:hover {
+            background-color: var(--link-hover-color);
+        }
+        .cafe-details .edit-button {
+            background-color: #FFC107; /* Yellow color for edit/delete button */
+            color: #FFFFFF;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-right: 10px; /* Space between buttons */
+        }
+        .cafe-details .edit-button:hover {
+            background-color: #E0A800; /* Darker yellow on hover */
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0); /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%; /* Could be more or less, depending on screen size */
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Cafe Time</h1>
+    <div class="nav-buttons">
+        <a href="{{ url_for('add_cafe') }}">Add New Cafe</a>
+        <a href="#" id="loginButton">Login</a>
+        <a href="#" id="logoutButton" style="display: none;">Logout</a>
+    </div>
+</div>
+<div class="main-content">
+    <h2>London</h2>
+    <p>The best work and study-friendly cafes in London. Find venues with free Wi-Fi hotspots, power sockets, and comfy
+        seating areas.</p>
+    <h4>Best Work-Friendly Places</h4>
+    <div class="row">
+        <div class="col-md-6 cafe-list">
+            {% for cafe in cafes %}
+            <div class="cafe-item">
+                <img src="{{ cafe.img_url }}" alt="Cafe Image">
+                <div class="cafe-details">
+                    <h5>{{ cafe.name }}</h5>
+                    <h4>{{ cafe.location }}</h4>
+                    <p>{{ cafe.open_hours }} - {{ cafe.close_hours }} ⏰</p>
+                    <div>
+                        <div>
+                            <span>Coffee: {{ cafe.coffee_price }}</span> |
+                            <span>WiFi: {% if cafe.has_wifi %}👍{% else %}👎{% endif %}</span> |
+                            <span>Power: {% if cafe.has_sockets %}👍{% else %}👎{% endif %}</span> |
+                            <span>Seats: {{ cafe.seats }}</span> |
+                            <span>Toilet: {% if cafe.has_toilet %}👍{% else %}👎{% endif %}</span> |
+                            <span>Calls: {% if cafe.can_take_calls %}👍{% else %}👎{% endif %}</span>
+                        </div>
+                        <div class="button-container">
+                            <button class="btn edit-button" style="display: none;" onclick="editCafe({{ cafe.id }})">
+                                Edit/Delete Cafe
+                            </button>
+                            <button class="btn" onclick="window.location.href='{{ cafe.map_url }}'">Get Address</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-6">
+            <div id="map" class="map">
+                <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1Dyxgs9Re9JFz_vmBjZqXpNzCqP6mMS4&ehbc=2E312F&noprof=1"
+                        width="640" height="480"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Admin Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="adminKey">Enter Admin Key:</label>
+                <input type="password" class="form-control" id="adminKey" placeholder="Admin Key">
+            </div>
+            <button type="submit" class="btn btn-primary float-right">Login</button>
+        </form>
+    </div>
+</div>
+
+<!-- The Edit/Delete Modal -->
+<div id="editDeleteModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Edit/Delete Cafe</h2>
+        <form id="editDeleteForm" method="POST">
+            <button type="button" class="btn btn-danger" onclick="deleteCafe()">Delete Cafe</button>
+            <button type="submit" class="btn btn-primary float-right">Edit Cafe</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // Modal logic
+    var loginModal = document.getElementById("loginModal");
+    var editDeleteModal = document.getElementById("editDeleteModal");
+    var loginBtn = document.getElementById("loginButton");
+    var logoutBtn = document.getElementById("logoutButton");
+    var closeBtns = document.getElementsByClassName("close");
+    var loginForm = document.getElementById("loginForm");
+    var editDeleteForm = document.getElementById("editDeleteForm");
+    var currentCafeId;
+
+    loginBtn.onclick = function () {
+        loginModal.style.display = "block";
+    }
+
+    for (var i = 0; i < closeBtns.length; i++) {
+        closeBtns[i].onclick = function () {
+            loginModal.style.display = "none";
+            editDeleteModal.style.display = "none";
+        }
+    }
+
+    window.onclick = function (event) {
+        if (event.target == loginModal || event.target == editDeleteModal) {
+            loginModal.style.display = "none";
+            editDeleteModal.style.display = "none";
+        }
+    }
+
+    loginForm.onsubmit = function (event) {
+        event.preventDefault();
+        var adminKey = document.getElementById("adminKey").value;
+        if (adminKey === "TopSecretKey") {
+            document.cookie = "admin=true; path=/";
+            loginModal.style.display = "none";
+            location.reload();
+        } else {
+            alert("Incorrect Admin Key!");
+        }
+    }
+
+    function editCafe(cafeId) {
+        currentCafeId = cafeId;
+        editDeleteForm.action = "/edit-cafe/" + cafeId;
+        editDeleteModal.style.display = "block";
+    }
+
+    function deleteCafe() {
+        fetch("/delete-cafe/" + currentCafeId, {
+            method: "POST",
+        }).then(function () {
+            location.reload();
+        });
+    }
+
+    // Check if admin
+    var isAdmin = document.cookie.split(';').some(function (item) {
+        return item.trim().startsWith('admin=');
+    });
+
+    if (isAdmin) {
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'block';
+        document.querySelectorAll('.cafe-item').forEach(function (item) {
+            var editButton = item.querySelector('.edit-button');
+            editButton.style.display = 'inline-block';
+        });
+    }
+
+    logoutBtn.onclick = function () {
+        document.cookie = "admin=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        location.reload();
+    }
+
+
+
+</script>
+</body>
+</html>
