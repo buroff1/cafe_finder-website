@@ -1,6 +1,6 @@
 Flask
-Flask-Bootstrap
 Flask-WTF
 Flask-SQLAlchemy
 WTForms
 SQLAlchemy
+Bootstrap-Flask
