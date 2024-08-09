@@ -59,7 +59,7 @@ pip install -r requirements.txt
 ```
 python main.py
 ```
-6. **Visit the website**:
+5. **Visit the website**:
 - Open `http://localhost:5000` in your web browser.
 
 ## 🔑Admin Key
