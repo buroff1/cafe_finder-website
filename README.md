@@ -1,8 +1,10 @@
 # Cafe Finder ☕
-## 🧪 Demo
-![wwdemo-ezgif com-optimize](https://github.com/user-attachments/assets/f0a94b9f-d3e3-4693-b5b8-0b378335b5a1)
+## 🧪Demo
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e116df34-a44a-4bc4-b6c4-3148a067fa30" alt="Demo">
+</p>
 
-## 📝 Content
+## 📝Content
 
 - [Overview](#%EF%B8%8Foverview)
 - [Technologies](#technologies)
